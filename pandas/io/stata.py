@@ -2206,15 +2206,16 @@ def _convert_datetime_to_stata_type(fmt: str) -> np.dtype:
 
 def _maybe_convert_to_int_keys(convert_dates: dict, varlist: list[Hashable]) -> dict:
     new_dict = {}
-    for key in convert_dates:
-        if not convert_dates[key].startswith("%"):  # make sure proper fmts
-            convert_dates[key] = "%" + convert_dates[key]
+    for key, typ in convert_dates.items():
+        if not typ.startswith("%"):  # make sure proper fmts
+            typ = "%" + typ
+            convert_dates[key] = typ
         if key in varlist:
-            new_dict.update({varlist.index(key): convert_dates[key]})
+            new_dict.update({varlist.index(key): typ})
         else:
             if not isinstance(key, int):
                 raise ValueError("convert_dates key must be a column or an integer")
-            new_dict.update({key: convert_dates[key]})
+            new_dict.update({key: typ})
     return new_dict
 
 
@@ -2867,7 +2868,7 @@ supported types."""
         # ds_format - just use 114
         self._write_bytes(struct.pack("b", 114))
         # byteorder
-        self._write(byteorder == ">" and "\x01" or "\x02")
+        self._write((byteorder == ">" and "\x01") or "\x02")
         # filetype
         self._write("\x01")
         # unused
@@ -3413,7 +3414,7 @@ class StataWriter117(StataWriter):
         # ds_format - 117
         bio.write(self._tag(bytes(str(self._dta_version), "utf-8"), "release"))
         # byteorder
-        bio.write(self._tag(byteorder == ">" and "MSF" or "LSF", "byteorder"))
+        bio.write(self._tag((byteorder == ">" and "MSF") or "LSF", "byteorder"))
         # number of vars, 2 bytes in 117 and 118, 4 byte in 119
         nvar_type = "H" if self._dta_version <= 118 else "I"
         bio.write(self._tag(struct.pack(byteorder + nvar_type, self.nvar), "K"))

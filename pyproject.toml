@@ -235,7 +235,7 @@ select = [
   # implicit string concatenation
   "ISC",
   # type-checking imports
-  "TCH",
+  "TC",
   # comprehensions
   "C4",
   # pygrep-hooks
@@ -304,10 +304,6 @@ ignore = [
   "PERF102",
   # try-except-in-loop, becomes useless in Python 3.11
   "PERF203",
-  # pytest-missing-fixture-name-underscore
-  "PT004",
-  # pytest-incorrect-fixture-name-underscore
-  "PT005",
   # pytest-parametrize-names-wrong-type
   "PT006",
   # pytest-parametrize-values-wrong-type
@@ -437,7 +433,7 @@ exclude = [
 "pandas/tests/*" = ["B028", "FLY"]
 "scripts/*" = ["B028"]
 # Keep this one enabled
-"pandas/_typing.py" = ["TCH"]
+"pandas/_typing.py" = ["TC"]
 
 [tool.ruff.lint.flake8-pytest-style]
 fixture-parentheses = false
